@@ -1,0 +1,10 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    //"command": "${workspaceRoot}/pawno/pawncc.exe",
+	"command": "${workspaceRoot}/compile_pawn_project.exe",
+    //"isShellCommand": true,
+    "args": ["${file}","-D${fileDirname}","-O1","-;+","-(+"],
+    "showOutput": "always"
+}

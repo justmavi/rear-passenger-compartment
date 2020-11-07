@@ -1,0 +1,12 @@
+{
+    "options_compiler": "'-;+' '-(+' -icompiler\\includes sources\\main.pwn -oamx\\",
+    "project_name": "rear_passenger_compartment",
+    "is_sound": false,
+    "upload_info": {
+        "upload_type": "",
+        "auth_type": "",
+        "username": "",
+        "password": "",
+        "ip_address": ""
+    }
+}

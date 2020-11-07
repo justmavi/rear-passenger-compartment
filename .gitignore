@@ -1,0 +1,12 @@
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.exe
+server_log.txt
+/compiler/*
+!/compiler/includes
+crashinfo.txt
+crashdetect_log.log
+server.cfg
