@@ -1,7 +1,8 @@
 /*
 * Rear Passenger Compartment v0.1
 * Website: pawn-wiki.ru
-** © Mavi, 2017 - 2020
+* В© Mavi, 2017 - 2020
+* Copied from Evolve-RP =))
 * November, 2020
 */
 
@@ -40,24 +41,24 @@
 #include "rear_passenger_compartment\functions\IsModelTruck.pwn"
 
 // Colors
-#define COLOR_BLUE					(0x8D8DFF00) // Голубой цвет. Используется только в команде /v, когда игрок пишет в рацию машины
-#define COLOR_GREY 					(0x696969FF) // Серый цвет. Используется при выводе ошибок и в команде /v
+#define COLOR_BLUE					(0x8D8DFF00) // ГѓГ®Г«ГіГЎГ®Г© Г¶ГўГҐГІ. Г€Г±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї ГІГ®Г«ГјГЄГ® Гў ГЄГ®Г¬Г Г­Г¤ГҐ /v, ГЄГ®ГЈГ¤Г  ГЁГЈГ°Г®ГЄ ГЇГЁГёГҐГІ Гў Г°Г Г¶ГЁГѕ Г¬Г ГёГЁГ­Г»
+#define COLOR_GREY 					(0x696969FF) // Г‘ГҐГ°Г»Г© Г¶ГўГҐГІ. Г€Г±ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї ГЇГ°ГЁ ГўГ»ГўГ®Г¤ГҐ Г®ГёГЁГЎГ®ГЄ ГЁ Гў ГЄГ®Г¬Г Г­Г¤ГҐ /v
 
 // Strings
-#define VEHICLE_ENTER_MSG 			"Используйте: /v [ текст ]"
+#define VEHICLE_ENTER_MSG 			"Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ: /v [ ГІГҐГЄГ±ГІ ]"
 
-#define VEHICLE_EXIT_DIALOG_CAPTION	"Выход | {BC2C2C}Транспорт"
-#define VEHICLE_EXIT_DIALOG_MSG 	"\n{FFFFFF}Вы действительно желаете покинуть транспортное средство?\n\n \
-									Район: %s\n" // при изменеии текста, не забудьте изменить значение VEHICLE_EXIT_DIALOG_MSG_LN низу
+#define VEHICLE_EXIT_DIALOG_CAPTION	"Г‚Г»ГµГ®Г¤ | {BC2C2C}Г’Г°Г Г­Г±ГЇГ®Г°ГІ"
+#define VEHICLE_EXIT_DIALOG_MSG 	"\n{FFFFFF}Г‚Г» Г¤ГҐГ©Г±ГІГўГЁГІГҐГ«ГјГ­Г® Г¦ГҐГ«Г ГҐГІГҐ ГЇГ®ГЄГЁГ­ГіГІГј ГІГ°Г Г­Г±ГЇГ®Г°ГІГ­Г®ГҐ Г±Г°ГҐГ¤Г±ГІГўГ®?\n\n \
+									ГђГ Г©Г®Г­: %s\n" // ГЇГ°ГЁ ГЁГ§Г¬ГҐГ­ГҐГЁГЁ ГІГҐГЄГ±ГІГ , Г­ГҐ Г§Г ГЎГіГ¤ГјГІГҐ ГЁГ§Г¬ГҐГ­ГЁГІГј Г§Г­Г Г·ГҐГ­ГЁГҐ VEHICLE_EXIT_DIALOG_MSG_LN Г­ГЁГ§Гі
 
-#define VEHICLE_EXIT_DIALOG_BTN_1	"»"
+#define VEHICLE_EXIT_DIALOG_BTN_1	"В»"
 #define VEHICLE_EXIT_DIALOG_BTN_2	"x"
 
-#define UNKNOWN_AREA_MSG			"Не определен" 
-#define FRONT_COMPARTMENT_MSG 		"Передний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
-#define REAR_COMPARTMENT_MSG 		"Задний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
-#define VEHICLE_CRASH_MSG			"Ваш грузовик потерпел аварию"
-#define VEHICLE_EXIT_ERROR_MSG		"Скорость грузовика слишком велика. Подождите, пока машина остановится" 
+#define UNKNOWN_AREA_MSG			"ГЌГҐ Г®ГЇГ°ГҐГ¤ГҐГ«ГҐГ­" 
+#define FRONT_COMPARTMENT_MSG 		"ГЏГҐГ°ГҐГ¤Г­ГЁГ© Г±Г Г«Г®Г­" // ГЇГ°ГЁ ГЁГ§Г¬ГҐГ­ГҐГЁГЁ ГІГҐГЄГ±ГІГ , Г­ГҐ Г§Г ГЎГіГ¤ГјГІГҐ ГЁГ§Г¬ГҐГ­ГЁГІГј Г§Г­Г Г·ГҐГ­ГЁГҐ COMPARTMENT_MSG_LN Г­ГЁГ§Гі
+#define REAR_COMPARTMENT_MSG 		"Г‡Г Г¤Г­ГЁГ© Г±Г Г«Г®Г­" // ГЇГ°ГЁ ГЁГ§Г¬ГҐГ­ГҐГЁГЁ ГІГҐГЄГ±ГІГ , Г­ГҐ Г§Г ГЎГіГ¤ГјГІГҐ ГЁГ§Г¬ГҐГ­ГЁГІГј Г§Г­Г Г·ГҐГ­ГЁГҐ COMPARTMENT_MSG_LN Г­ГЁГ§Гі
+#define VEHICLE_CRASH_MSG			"Г‚Г Гё ГЈГ°ГіГ§Г®ГўГЁГЄ ГЇГ®ГІГҐГ°ГЇГҐГ« Г ГўГ Г°ГЁГѕ"
+#define VEHICLE_EXIT_ERROR_MSG		"Г‘ГЄГ®Г°Г®Г±ГІГј ГЈГ°ГіГ§Г®ГўГЁГЄГ  Г±Г«ГЁГёГЄГ®Г¬ ГўГҐГ«ГЁГЄГ . ГЏГ®Г¤Г®Г¦Г¤ГЁГІГҐ, ГЇГ®ГЄГ  Г¬Г ГёГЁГ­Г  Г®Г±ГІГ Г­Г®ГўГЁГІГ±Гї" 
 
 
 
@@ -65,15 +66,15 @@
 #define REAR_SEAT_ID 				(2)
 #define COMPARTMENT_INT_ID 			(21)
 #define VEHICLE_EXIT_DIALOG_ID		(7007) 
-#define VEHICLE_EXIT_DIALOG_MSG_LN	(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
-#define MIN_SPEED_FOR_EXIT_ERROR	(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
-#define COMPARTMENT_MSG_LN 			(14) // длина строки REAR_COMPARTMENT_MSG или FRONT_COMPARTMENT_MSG, смотря какой из них самый длинный (не учитывая спецификаторов, литералов и '\0')
+#define VEHICLE_EXIT_DIALOG_MSG_LN	(79) // Г¤Г«ГЁГ­Г  Г±ГІГ°Г®ГЄГЁ VEHICLE_EXIT_DIALOG_MSG (Г­ГҐ ГіГ·ГЁГІГ»ГўГ Гї Г±ГЇГҐГ¶ГЁГґГЁГЄГ ГІГ®Г°Г®Гў, Г«ГЁГІГҐГ°Г Г«Г®Гў ГЁ '\0')
+#define MIN_SPEED_FOR_EXIT_ERROR	(20.00) // ГҐГ±Г«ГЁ Г±ГЄГ®Г°Г®Г±ГІГј ГІ/Г± ГЎГіГ¤ГҐГІ ГўГ»ГёГҐ ГіГЄГ Г§Г Г­Г­Г®Г©, ГІГ® ГЁГЈГ°Г®ГЄ Г­ГҐ Г±Г¬Г®Г¦ГҐГІ ГўГ»Г©ГІГЁ ГЁГ§ ГЁГ­ГІГҐГ°ГјГҐГ°Г 
+#define COMPARTMENT_MSG_LN 			(14) // Г¤Г«ГЁГ­Г  Г±ГІГ°Г®ГЄГЁ REAR_COMPARTMENT_MSG ГЁГ«ГЁ FRONT_COMPARTMENT_MSG, Г±Г¬Г®ГІГ°Гї ГЄГ ГЄГ®Г© ГЁГ§ Г­ГЁГµ Г±Г Г¬Г»Г© Г¤Г«ГЁГ­Г­Г»Г© (Г­ГҐ ГіГ·ГЁГІГ»ГўГ Гї Г±ГЇГҐГ¶ГЁГґГЁГЄГ ГІГ®Г°Г®Гў, Г«ГЁГІГҐГ°Г Г«Г®Гў ГЁ '\0')
 /* ================================= Global Arrays =================================*/
 
 
 new PlayerVehicleID[MAX_PLAYERS char];
 new Iterator: TruckPassengers[MAX_VEHICLES]<MAX_PLAYERS>;
-new const Float: InteriorPositions[][] = // координаты на телепорт в салоны
+new const Float: InteriorPositions[][] = // ГЄГ®Г®Г°Г¤ГЁГ­Г ГІГ» Г­Г  ГІГҐГ«ГҐГЇГ®Г°ГІ Гў Г±Г Г«Г®Г­Г»
 {
 	{1843.2662, 529.3488, 3052.1602}, // enforcer
 	{1829.6780, 919.6672, 3022.8008}, // ambulance
@@ -82,8 +83,8 @@ new const Float: InteriorPositions[][] = // координаты на телепорт в салоны
 
 /* ================================= Callbacks =================================*/
 
-// У меня почему-то не получилось перетащить паблики в отдельные файлы, таки не смог понять в чём дело.
-// Раньше с таким никогда не встречался, но всегда делал так. Если знаете в чем дело, отпишитесь в теме =)
+// Г“ Г¬ГҐГ­Гї ГЇГ®Г·ГҐГ¬Гі-ГІГ® Г­ГҐ ГЇГ®Г«ГіГ·ГЁГ«Г®Г±Гј ГЇГҐГ°ГҐГІГ Г№ГЁГІГј ГЇГ ГЎГ«ГЁГЄГЁ Гў Г®ГІГ¤ГҐГ«ГјГ­Г»ГҐ ГґГ Г©Г«Г», ГІГ ГЄГЁ Г­ГҐ Г±Г¬Г®ГЈ ГЇГ®Г­ГїГІГј Гў Г·ВёГ¬ Г¤ГҐГ«Г®.
+// ГђГ Г­ГјГёГҐ Г± ГІГ ГЄГЁГ¬ Г­ГЁГЄГ®ГЈГ¤Г  Г­ГҐ ГўГ±ГІГ°ГҐГ·Г Г«Г±Гї, Г­Г® ГўГ±ГҐГЈГ¤Г  Г¤ГҐГ«Г Г« ГІГ ГЄ. Г…Г±Г«ГЁ Г§Г­Г ГҐГІГҐ Гў Г·ГҐГ¬ Г¤ГҐГ«Г®, Г®ГІГЇГЁГёГЁГІГҐГ±Гј Гў ГІГҐГ¬ГҐ =)
 
 public OnFilterScriptInit()
 {
@@ -229,8 +230,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			SetPlayerPos(playerid, x, y, z);
 			SetPlayerVirtualWorld(playerid, GetVehicleVirtualWorld(PlayerVehicleID{playerid}));
 
-			/// Важно! Если в вашем моде не исключено появление т/с в интерьере, то забудьте об этом скрипте! 
-			/// Вам надо написать свой GetVehicleInterior(vehicleid), так как в SAMP его нет 
+			/// Г‚Г Г¦Г­Г®! Г…Г±Г«ГЁ Гў ГўГ ГёГҐГ¬ Г¬Г®Г¤ГҐ Г­ГҐ ГЁГ±ГЄГ«ГѕГ·ГҐГ­Г® ГЇГ®ГїГўГ«ГҐГ­ГЁГҐ ГІ/Г± Гў ГЁГ­ГІГҐГ°ГјГҐГ°ГҐ, ГІГ® Г§Г ГЎГіГ¤ГјГІГҐ Г®ГЎ ГЅГІГ®Г¬ Г±ГЄГ°ГЁГЇГІГҐ! 
+			/// Г‚Г Г¬ Г­Г Г¤Г® Г­Г ГЇГЁГ±Г ГІГј Г±ГўГ®Г© GetVehicleInterior(vehicleid), ГІГ ГЄ ГЄГ ГЄ Гў SAMP ГҐГЈГ® Г­ГҐГІ 
 			//SetPlayerInterior(playerid, GetVehicleInterior(PlayerVehicleID{playerid})); 
 
 			SetPlayerInterior(playerid, 0);
