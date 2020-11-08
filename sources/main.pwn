@@ -68,7 +68,6 @@
 #define VEHICLE_EXIT_DIALOG_MSG_LN	(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
 #define MIN_SPEED_FOR_EXIT_ERROR	(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
 #define COMPARTMENT_MSG_LN 			(14) // длина строки REAR_COMPARTMENT_MSG или FRONT_COMPARTMENT_MSG, смотря какой из них самый длинный (не учитывая спецификаторов, литералов и '\0')
-
 /* ================================= Global Arrays =================================*/
 
 
@@ -172,7 +171,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
-	if(newkeys == KEY_SECONDARY_ATTACK)
+	if(oldkeys & KEY_SECONDARY_ATTACK)
 	{
 		if(PlayerVehicleID{playerid} != 0 && GetPlayerInterior(playerid) == COMPARTMENT_INT_ID)
 		{
@@ -182,7 +181,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				zoneName[MAX_MAP_ZONE_NAME];
 			
 			if(!GetMapZoneName(zone, zoneName)) zoneName = UNKNOWN_AREA_MSG;
-
+			
 			format(body, sizeof body, VEHICLE_EXIT_DIALOG_MSG, zoneName);
 			return ShowPlayerDialog(playerid, VEHICLE_EXIT_DIALOG_ID, DIALOG_STYLE_MSGBOX, VEHICLE_EXIT_DIALOG_CAPTION, body, VEHICLE_EXIT_DIALOG_BTN_1, VEHICLE_EXIT_DIALOG_BTN_2);		
 		}
