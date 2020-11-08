@@ -2,7 +2,7 @@
 * Rear Passenger Compartment v0.1
 * Website: pawn-wiki.ru
 * © Mavi, 2017 - 2020
-* Copied from Evolve-RP =))
+* Copied from Evolve-RP =)
 * November, 2020
 */
 
