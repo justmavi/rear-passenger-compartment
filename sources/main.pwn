@@ -33,40 +33,40 @@
 // Cars
 #define CAR_ENFORCER 				(427)
 #define CAR_AMBULANCE 				(416)
-#define CAR_PONNY 					(413)
+#define CAR_PONNY 				(413)
 #define CAR_BURRITO 				(482)
 #define CAR_BERCKLEYS				(459)
 
 #include "sources\functions\IsModelTruck.pwn"
 
 // Colors
-#define COLOR_BLUE					(0x8D8DFF00) // Голубой цвет. Используется только в команде /v, когда игрок пишет в рацию машины
-#define COLOR_GREY 					(0x696969FF) // Серый цвет. Используется при выводе ошибок и в команде /v
+#define COLOR_BLUE				(0x8D8DFF00) // Голубой цвет. Используется только в команде /v, когда игрок пишет в рацию машины
+#define COLOR_GREY 				(0x696969FF) // Серый цвет. Используется при выводе ошибок и в команде /v
 
 // Strings
 #define VEHICLE_ENTER_MSG 			"Используйте: /v [ текст ]"
 
-#define VEHICLE_EXIT_DIALOG_CAPTION	"Выход | {BC2C2C}Транспорт"
-#define VEHICLE_EXIT_DIALOG_MSG 	"\n{FFFFFF}Вы действительно желаете покинуть транспортное средство?\n\n \
-									Район: %s\n" // при изменеии текста, не забудьте изменить значение VEHICLE_EXIT_DIALOG_MSG_LN низу
+#define VEHICLE_EXIT_DIALOG_CAPTION		"Выход | {BC2C2C}Транспорт"
+#define VEHICLE_EXIT_DIALOG_MSG 		"\n{FFFFFF}Вы действительно желаете покинуть транспортное средство?\n\n \
+						Район: %s\n" // при изменеии текста, не забудьте изменить значение VEHICLE_EXIT_DIALOG_MSG_LN низу
 
-#define VEHICLE_EXIT_DIALOG_BTN_1	"»"
-#define VEHICLE_EXIT_DIALOG_BTN_2	"x"
+#define VEHICLE_EXIT_DIALOG_BTN_1		"»"
+#define VEHICLE_EXIT_DIALOG_BTN_2		"x"
 
 #define UNKNOWN_AREA_MSG			"Не определен" 
-#define FRONT_COMPARTMENT_MSG 		"Передний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
-#define REAR_COMPARTMENT_MSG 		"Задний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
+#define FRONT_COMPARTMENT_MSG 			"Передний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
+#define REAR_COMPARTMENT_MSG 			"Задний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
 #define VEHICLE_CRASH_MSG			"Ваш грузовик потерпел аварию"
-#define VEHICLE_EXIT_ERROR_MSG		"Скорость грузовика слишком велика. Подождите, пока машина остановится" 
+#define VEHICLE_EXIT_ERROR_MSG			"Скорость грузовика слишком велика. Подождите, пока машина остановится" 
 
 
 
 // Other
 #define REAR_SEAT_ID 				(2)
 #define COMPARTMENT_INT_ID 			(21)
-#define VEHICLE_EXIT_DIALOG_ID		(7007) 
-#define VEHICLE_EXIT_DIALOG_MSG_LN	(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
-#define MIN_SPEED_FOR_EXIT_ERROR	(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
+#define VEHICLE_EXIT_DIALOG_ID			(7007) 
+#define VEHICLE_EXIT_DIALOG_MSG_LN		(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
+#define MIN_SPEED_FOR_EXIT_ERROR		(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
 #define COMPARTMENT_MSG_LN 			(14) // длина строки REAR_COMPARTMENT_MSG или FRONT_COMPARTMENT_MSG, смотря какой из них самый длинный (не учитывая спецификаторов, литералов и '\0')
 /* ================================= Global Arrays =================================*/
 
