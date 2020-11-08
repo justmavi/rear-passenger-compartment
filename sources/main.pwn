@@ -1,5 +1,5 @@
 /*
-* Rear Passenger Compartment v0.1
+* Rear Passenger Compartment v0.2
 * Website: pawn-wiki.ru
 ** © Mavi, 2017 - 2020
 * November, 2020
@@ -11,67 +11,67 @@
 
 #include <a_samp>
 
-#include "sources\libs\Pawn.CMD.inc"
-#include "sources\libs\streamer.inc"
-#include "sources\libs\foreach.inc"
-#include "sources\libs\sscanf2.inc"
-#include "sources\libs\map-zones.inc"
+#include "rear_passenger_compartment\libs\Pawn.CMD.inc"
+#include "rear_passenger_compartment\libs\streamer.inc"
+#include "rear_passenger_compartment\libs\foreach.inc"
+#include "rear_passenger_compartment\libs\sscanf2.inc"
+#include "rear_passenger_compartment\libs\map-zones.inc"
 
 // interiors
 
-#include "sources\interiors\burrito.pwn"
-#include "sources\interiors\enforcer.pwn"
-#include "sources\interiors\ambulance.pwn"
+#include "rear_passenger_compartment\interiors\burrito.pwn"
+#include "rear_passenger_compartment\interiors\enforcer.pwn"
+#include "rear_passenger_compartment\interiors\ambulance.pwn"
 
 // Functions
 
-#include "sources\functions\GetVehicleBootPosition.pwn"
-#include "sources\functions\GetVehicleSpeed.pwn"
+#include "rear_passenger_compartment\functions\GetVehicleBootPosition.pwn"
+#include "rear_passenger_compartment\functions\GetVehicleSpeed.pwn"
 
 /* ================================= Defines =================================*/
 
 // Cars
 #define CAR_ENFORCER 				(427)
 #define CAR_AMBULANCE 				(416)
-#define CAR_PONNY 				(413)
+#define CAR_PONNY 					(413)
 #define CAR_BURRITO 				(482)
 #define CAR_BERCKLEYS				(459)
 
-#include "sources\functions\IsModelTruck.pwn"
+#include "rear_passenger_compartment\functions\IsModelTruck.pwn"
 
 // Colors
-#define COLOR_BLUE				(0x8D8DFF00) // Голубой цвет. Используется только в команде /v, когда игрок пишет в рацию машины
-#define COLOR_GREY 				(0x696969FF) // Серый цвет. Используется при выводе ошибок и в команде /v
+#define COLOR_BLUE					(0x8D8DFF00) // Голубой цвет. Используется только в команде /v, когда игрок пишет в рацию машины
+#define COLOR_GREY 					(0x696969FF) // Серый цвет. Используется при выводе ошибок и в команде /v
 
 // Strings
 #define VEHICLE_ENTER_MSG 			"Используйте: /v [ текст ]"
 
-#define VEHICLE_EXIT_DIALOG_CAPTION		"Выход | {BC2C2C}Транспорт"
-#define VEHICLE_EXIT_DIALOG_MSG 		"\n{FFFFFF}Вы действительно желаете покинуть транспортное средство?\n\n \
-						Район: %s\n" // при изменеии текста, не забудьте изменить значение VEHICLE_EXIT_DIALOG_MSG_LN низу
+#define VEHICLE_EXIT_DIALOG_CAPTION	"Выход | {BC2C2C}Транспорт"
+#define VEHICLE_EXIT_DIALOG_MSG 	"\n{FFFFFF}Вы действительно желаете покинуть транспортное средство?\n\n \
+									Район: %s\n" // при изменеии текста, не забудьте изменить значение VEHICLE_EXIT_DIALOG_MSG_LN низу
 
-#define VEHICLE_EXIT_DIALOG_BTN_1		"»"
-#define VEHICLE_EXIT_DIALOG_BTN_2		"x"
+#define VEHICLE_EXIT_DIALOG_BTN_1	"»"
+#define VEHICLE_EXIT_DIALOG_BTN_2	"x"
 
 #define UNKNOWN_AREA_MSG			"Не определен" 
-#define FRONT_COMPARTMENT_MSG 			"Передний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
-#define REAR_COMPARTMENT_MSG 			"Задний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
+#define FRONT_COMPARTMENT_MSG 		"Передний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
+#define REAR_COMPARTMENT_MSG 		"Задний салон" // при изменеии текста, не забудьте изменить значение COMPARTMENT_MSG_LN низу
 #define VEHICLE_CRASH_MSG			"Ваш грузовик потерпел аварию"
-#define VEHICLE_EXIT_ERROR_MSG			"Скорость грузовика слишком велика. Подождите, пока машина остановится" 
+#define VEHICLE_EXIT_ERROR_MSG		"Скорость грузовика слишком велика. Подождите, пока машина остановится" 
 
 
 
 // Other
 #define REAR_SEAT_ID 				(2)
 #define COMPARTMENT_INT_ID 			(21)
-#define VEHICLE_EXIT_DIALOG_ID			(7007) 
-#define VEHICLE_EXIT_DIALOG_MSG_LN		(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
-#define MIN_SPEED_FOR_EXIT_ERROR		(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
+#define VEHICLE_EXIT_DIALOG_ID		(7007) 
+#define VEHICLE_EXIT_DIALOG_MSG_LN	(79) // длина строки VEHICLE_EXIT_DIALOG_MSG (не учитывая спецификаторов, литералов и '\0')
+#define MIN_SPEED_FOR_EXIT_ERROR	(20.00) // если скорость т/с будет выше указанной, то игрок не сможет выйти из интерьера
 #define COMPARTMENT_MSG_LN 			(14) // длина строки REAR_COMPARTMENT_MSG или FRONT_COMPARTMENT_MSG, смотря какой из них самый длинный (не учитывая спецификаторов, литералов и '\0')
 /* ================================= Global Arrays =================================*/
 
 
-new PlayerVehicleID[MAX_PLAYERS char];
+new PlayerVehicleID[MAX_PLAYERS];
 new Iterator: TruckPassengers[MAX_VEHICLES]<MAX_PLAYERS>;
 new const Float: InteriorPositions[][] = // координаты на телепорт в салоны
 {
@@ -91,7 +91,7 @@ public OnFilterScriptInit()
 
 	foreach(new i : Player)
 	{
-		PlayerVehicleID{i} = 0;
+		PlayerVehicleID[i] = 0;
 	}
 	
 	print("Rear passenger compartment v0.1 by Mavi loaded");
@@ -109,7 +109,7 @@ public OnFilterScriptExit()
 
 	foreach(new i : Player)
 	{
-		PlayerVehicleID{i} = 0;
+		PlayerVehicleID[i] = 0;
 	}
 
 	print("Rear passenger compartment v0.1 by Mavi unloaded");
@@ -121,7 +121,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 {
 	new vehicleid = GetPlayerVehicleID(playerid);
 
-	if(vehicleid != 0 && vehicleid != INVALID_VEHICLE_ID)
+	if(vehicleid != 0)
 	{
 		new model = GetVehicleModel(vehicleid);
 
@@ -151,7 +151,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 				SetCameraBehindPlayer(playerid);
 			}
 
-			PlayerVehicleID{playerid} = vehicleid;
+			PlayerVehicleID[playerid] = vehicleid;
 			Iter_Add(TruckPassengers[vehicleid], playerid);
 
 			SendClientMessage(playerid, COLOR_GREY, VEHICLE_ENTER_MSG);
@@ -160,10 +160,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 		}
 	}
 
-	else if(PlayerVehicleID{playerid} != 0 && GetPlayerInterior(playerid) != COMPARTMENT_INT_ID) 
+	else if(PlayerVehicleID[playerid] != 0 && GetPlayerInterior(playerid) != COMPARTMENT_INT_ID) 
 	{
-		Iter_Remove(TruckPassengers[PlayerVehicleID{playerid}], playerid);
-		PlayerVehicleID{playerid} = 0;
+		Iter_Remove(TruckPassengers[PlayerVehicleID[playerid]], playerid);
+		PlayerVehicleID[playerid] = 0;
 	}
 
 	return 1;
@@ -173,11 +173,11 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	if(oldkeys & KEY_SECONDARY_ATTACK)
 	{
-		if(PlayerVehicleID{playerid} != 0 && GetPlayerInterior(playerid) == COMPARTMENT_INT_ID)
+		if(PlayerVehicleID[playerid] != 0 && GetPlayerInterior(playerid) == COMPARTMENT_INT_ID)
 		{
 			new body[VEHICLE_EXIT_DIALOG_MSG_LN + 2 * MAX_MAP_ZONE_NAME - 3];
 
-			new MapZone: zone = GetVehicleMapZone(PlayerVehicleID{playerid}), 
+			new MapZone: zone = GetVehicleMapZone(PlayerVehicleID[playerid]), 
 				zoneName[MAX_MAP_ZONE_NAME];
 			
 			if(!GetMapZoneName(zone, zoneName)) zoneName = UNKNOWN_AREA_MSG;
@@ -202,7 +202,7 @@ public OnVehicleDeath(vehicleid, killerid)
 				SetPlayerHealth(i, 0.00);
 			}
 
-			PlayerVehicleID{i} = 0;
+			PlayerVehicleID[i] = 0;
 		}
 
 		Iter_Clear(TruckPassengers[vehicleid]);
@@ -217,28 +217,28 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	{
 		if(response)
 		{
-			if(GetVehicleSpeed(PlayerVehicleID{playerid}) > MIN_SPEED_FOR_EXIT_ERROR)
+			if(GetVehicleSpeed(PlayerVehicleID[playerid]) > MIN_SPEED_FOR_EXIT_ERROR)
 				return SendClientMessage(playerid, COLOR_GREY, VEHICLE_EXIT_ERROR_MSG);
 
 			new Float: x,
 				Float: y,
 				Float: z;
 
-			GetVehicleBootPosition(PlayerVehicleID{playerid}, x, y, z);
+			GetVehicleBootPosition(PlayerVehicleID[playerid], x, y, z);
 
 			SetPlayerPos(playerid, x, y, z);
-			SetPlayerVirtualWorld(playerid, GetVehicleVirtualWorld(PlayerVehicleID{playerid}));
+			SetPlayerVirtualWorld(playerid, GetVehicleVirtualWorld(PlayerVehicleID[playerid]));
 
 			/// Важно! Если в вашем моде не исключено появление т/с в интерьере, то забудьте об этом скрипте! 
 			/// Вам надо написать свой GetVehicleInterior(vehicleid), так как в SAMP его нет 
-			//SetPlayerInterior(playerid, GetVehicleInterior(PlayerVehicleID{playerid})); 
+			//SetPlayerInterior(playerid, GetVehicleInterior(PlayerVehicleID[playerid])); 
 
 			SetPlayerInterior(playerid, 0);
 			SetPlayerFacingAngle(playerid, 180.00);
 			SetCameraBehindPlayer(playerid);
 
-			Iter_Remove(TruckPassengers[PlayerVehicleID{playerid}], playerid);
-			PlayerVehicleID{playerid} = 0;
+			Iter_Remove(TruckPassengers[PlayerVehicleID[playerid]], playerid);
+			PlayerVehicleID[playerid] = 0;
 		}
 	}
 
@@ -249,7 +249,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 
 CMD:v(playerid, params[])
 {
-	if(PlayerVehicleID{playerid} == 0) return 1;
+	if(PlayerVehicleID[playerid] == 0) return 1;
 
 	extract params -> new string: text[100]; else return SendClientMessage(playerid, COLOR_GREY, VEHICLE_ENTER_MSG);
 
@@ -259,7 +259,7 @@ CMD:v(playerid, params[])
 	new message[sizeof text + sizeof name + COMPARTMENT_MSG_LN + 1];
 	format(message, sizeof message, "%s %s: %s", (0 <= GetPlayerVehicleSeat(playerid) < REAR_SEAT_ID) ? FRONT_COMPARTMENT_MSG : REAR_COMPARTMENT_MSG, name, text);
 
-	foreach(new i : TruckPassengers[PlayerVehicleID{playerid}])
+	foreach(new i : TruckPassengers[PlayerVehicleID[playerid]])
 		SendClientMessage(i, COLOR_BLUE, message);
 
 	return 1;
