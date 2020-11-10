@@ -11,22 +11,22 @@
 
 #include <a_samp>
 
-#include "rear_passenger_compartment\libs\Pawn.CMD.inc"
-#include "rear_passenger_compartment\libs\streamer.inc"
-#include "rear_passenger_compartment\libs\foreach.inc"
-#include "rear_passenger_compartment\libs\sscanf2.inc"
-#include "rear_passenger_compartment\libs\map-zones.inc"
+#include "sources\libs\Pawn.CMD.inc"
+#include "sources\libs\streamer.inc"
+#include "sources\libs\foreach.inc"
+#include "sources\libs\sscanf2.inc"
+#include "sources\libs\map-zones.inc"
 
 // interiors
 
-#include "rear_passenger_compartment\interiors\burrito.pwn"
-#include "rear_passenger_compartment\interiors\enforcer.pwn"
-#include "rear_passenger_compartment\interiors\ambulance.pwn"
+#include "sources\interiors\burrito.pwn"
+#include "sources\interiors\enforcer.pwn"
+#include "sources\interiors\ambulance.pwn"
 
 // Functions
 
-#include "rear_passenger_compartment\functions\GetVehicleBootPosition.pwn"
-#include "rear_passenger_compartment\functions\GetVehicleSpeed.pwn"
+#include "sources\functions\GetVehicleBootPosition.pwn"
+#include "sources\functions\GetVehicleSpeed.pwn"
 
 /* ================================= Defines =================================*/
 
